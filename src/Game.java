@@ -25,18 +25,21 @@ public class Game {
 			int dir = input.nextInt();
 			switch (dir) {
 			case 0:
-				System.out.println("The move is: " + board.checkLegalMove(r, c, Directions.UP));
+				board.makeMove(r, c, Directions.UP);
 				break;
 			case 1:
-				System.out.println("The move is: " + board.checkLegalMove(r, c, Directions.DOWN));
+				board.makeMove(r, c, Directions.DOWN);
 				break;
 			case 2:
-				System.out.println("The move is: " + board.checkLegalMove(r, c, Directions.LEFT));
+				board.makeMove(r, c, Directions.LEFT);
 				break;
 			case 3:
-				System.out.println("The move is: " + board.checkLegalMove(r, c, Directions.RIGHT));
+				board.makeMove(r, c, Directions.RIGHT);
 				break;
 			}
+			System.out.println("Board after move: ");
+			board.print_board();
+			System.out.println();
 		}
 	}
 }

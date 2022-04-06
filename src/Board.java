@@ -20,8 +20,8 @@ public class Board {
 			System.out.println("Null board");
 		else {
 			System.out.print("  ");
-			for(int i = 0; i < 10; i++)
-				System.out.print(" "+i + " ");
+			for (int i = 0; i < 10; i++)
+				System.out.print(" " + i + " ");
 			System.out.println();
 			for (int i = 0; i < board.length; i++) {
 				System.out.print(i + ":");
@@ -70,6 +70,85 @@ public class Board {
 		}
 	}
 
+	public void makeMove(int r, int c, Directions direction) {
+		int[] dest = getDest(r, c, direction);
+		if (checkLegalMove(r, c, direction)) {
+			System.out.println("Before swap: ");
+			print_board();
+			performSwap(r, c, dest[0], dest[1]);
+			
+			System.out.println("After swap: ");
+			print_board();
+			System.out.println();
+		}
+		else
+			return;
+
+		char currentChar = board[r][c];
+		if (leftRight(r, c) > 0) {
+			// go all the way left
+			int col = c;
+			while (col > 0 && board[r][col - 1] == currentChar) {
+				col--;
+				board[r][col] = EMPTY_CHAR;
+			}
+			// go all the way right
+			while (col < BOARD_SIZE && board[r][col + 1] == currentChar) {
+				col++;
+				board[r][col] = EMPTY_CHAR;
+			}
+
+		}
+		if (upDown(r, c) > 0) {
+
+			// go all the way up
+			int row = r;
+			while (row > 0 && board[row - 1][c] == currentChar) {
+				row--;
+				board[row][c] = EMPTY_CHAR;
+			}
+
+			// go all the way down
+			while (row < BOARD_SIZE && board[row + 1][c] == currentChar) {
+				row++;
+				board[row][c] = EMPTY_CHAR;
+			}
+		}
+
+		/**************DEST********************/
+		
+		int newR = dest[0];
+		int newC = dest[1];
+		if (leftRight(newR, newC) > 0) {
+			// go all the way left
+			int col = newC;
+			while (col > 0 && board[newR][col - 1] == currentChar) {
+				col--;
+				board[newR][col] = EMPTY_CHAR;
+			}
+			// go all the way right
+			while (col < BOARD_SIZE && board[newR][col + 1] == currentChar) {
+				col++;
+				board[newR][col] = EMPTY_CHAR;
+			}
+		}
+		if (upDown(newR, newC) > 0) {
+			// go all the way up
+			int row = newR;
+			while (row > 0 && board[row - 1][newC] == currentChar) {
+				row--;
+				board[row][newC] = EMPTY_CHAR;
+			}
+
+			// go all the way down
+			while (row < BOARD_SIZE && board[row + 1][newC] == currentChar) {
+				row++;
+				board[row][newC] = EMPTY_CHAR;
+			}
+		}
+		board[r][c] = EMPTY_CHAR;
+	}
+
 	public boolean checkLegalMove(int r, int c, Directions direction) {
 		// Illegal initial location
 		String err = "Illegal move";
@@ -109,11 +188,7 @@ public class Board {
 			dest = getDest(r, c, Directions.RIGHT);
 			break;
 		}
-		System.out.printf("Swap coords: %d, %d -> %d, %d\n", r,c,dest[0],dest[1]);
 		performSwap(r, c, dest[0], dest[1]);
-		System.out.println("After swap: ");
-		print_board();
-		System.out.println();
 		if (countTriosInLocation(dest[0], dest[1]) > 0 || countTriosInLocation(r, c) > 0) {
 			performSwap(r, c, dest[0], dest[1]);
 			return true;
@@ -156,7 +231,7 @@ public class Board {
 	private int upDown(int r, int c) {
 		int counter = 0;
 		// if in two top rows
-		for (int row = r - 2; row < Math.min(r, BOARD_SIZE-2); row++) {
+		for (int row = r - 2; row < Math.min(r, BOARD_SIZE - 2); row++) {
 			boolean isTriple = true;
 			if (!isLegalLoc(row, c))
 				continue;
@@ -169,14 +244,13 @@ public class Board {
 			if (isTriple)
 				counter++;
 		}
-		
 		return counter;
 	}
 
 	private int leftRight(int r, int c) {
 
 		int counter = 0;
-		for (int col = c - 2; col <Math.min(c, BOARD_SIZE-2); col++) {
+		for (int col = c - 2; col < Math.min(c, BOARD_SIZE - 2); col++) {
 			boolean isTriple = true;
 			if (!isLegalLoc(r, col))
 				continue;
@@ -190,7 +264,6 @@ public class Board {
 			if (isTriple)
 				counter++;
 		}
-		
 		return counter;
 
 	}
